@@ -1,6 +1,6 @@
 ﻿namespace BankingOperationsApi.Services.SatnaTransfer
 {
-    public class SatnaTransferClient
+    public class SatnaTransferClient : ISatnaTransferClient
     {
     }
 }

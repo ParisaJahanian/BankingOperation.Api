@@ -1,6 +1,6 @@
 ﻿namespace BankingOperationsApi.Services.PayaTransfer
 {
-    public class PayaTransferService
+    public class PayaTransferService : IPayaTransferService
     {
     }
 }
