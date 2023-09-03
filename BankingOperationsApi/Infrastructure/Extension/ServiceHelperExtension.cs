@@ -26,24 +26,30 @@ namespace BankingOperationsApi.Infrastructure.Extension
 
         public static void AddFaraboomCommonHeader(this HttpRequestMessage request, FaraboomOptions options)
         {
+            request.Headers.Add("Device-Id", options.DeviceId);
             request.Headers.Add("App-Key", options.AppKey);
-            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Token-Id", options.TokenId);
             request.Headers.Add("Client-Ip-Address", "127.0.0.1");
             request.Headers.Add("Client-Platform-Type", "WEB");
             request.Headers.Add("Client-Device-Id", options.DeviceId);
+            request.Headers.Add("Bank-Id", options.BankId);
             request.Headers.Add("Client-User-Id", "09120000000");
             request.Headers.Add("Client-User-Agent", $"Apsan/Phoenix{typeof(StartupBase).Assembly.GetName().Version}");
+            request.Headers.Add("Accept-Language", "fa");
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Cookie", options.Cookie);
         }
-        //public static FormUrlEncodedContent CarTollsFormUrlEncodedContent(string UserName, string Password)
-        //{
-        //    var result = new Dictionary<string, string>
-        //    {
-        //        {"UserName", UserName},
-        //        {"Password", Password},
-        //    };
-        //    var formUrlEncodedContent = new FormUrlEncodedContent(result);
-        //    return formUrlEncodedContent;
-        //}
+        public static FormUrlEncodedContent LoginFormUrlEncodedContent(FaraboomOptions options)
+        {
+            var result = new Dictionary<string, string>
+            {
+                {"grant_type", options.GrantType},
+                {"client_id", options.ClientId},
+                {"client_secret", options.ClientSecret},
+            };
+            var formUrlEncodedContent = new FormUrlEncodedContent(result);
+            return formUrlEncodedContent;
+        }
         public static T GenerateApiErrorResponse<T>(ErrorCodesProvider errorCode) where T : ErrorResult, new()
         {
             return new T

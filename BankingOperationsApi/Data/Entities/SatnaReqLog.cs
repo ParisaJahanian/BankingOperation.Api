@@ -1,6 +1,6 @@
 ﻿namespace BankingOperationsApi.Data.Entities
 {
-    public class SatnaReqLog
+    public class SatnaReqLog : BaseEntity<string>
     {
         public SatnaReqLog()
         {
