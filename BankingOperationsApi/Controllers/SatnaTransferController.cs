@@ -28,28 +28,23 @@ namespace BankingOperationsApi.Controllers
             _logger = logger;
             _baseLog = baseLog;
         }
-        /// <summary>
-        ///  وب سرویس احراز هویت
-        /// </summary>
-        /// <param name="loginReqDTO"></param>
-        /// <returns></returns>
-        /// <exception cref="RamzNegarException"></exception>
+
         [AllowAnonymous]
-        [HttpPost("Login")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FaraboomLoginOutput))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(FaraboomLoginOutput))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(FaraboomLoginOutput))]
-        public async Task<ActionResult<FaraboomLoginOutput>> SatnaTransferLogin(BasePublicLogData basePublicLog)
+        [HttpPost("Token")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenRes))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(TokenRes))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TokenRes))]
+        public async Task<ActionResult<TokenRes>> SatnaTransferLogin(BasePublicLogData basePublicLog)
         {
-            var result = await _carElectronicTollService.LoginAsync(basePublicLog);
+            var result = await _satnaTransferService.GetTokenAsync(basePublicLog);
             try
             {
                 if (result.StatusCode != "OK")
                 {
                     _logger.LogError($"{nameof(SatnaTransferLogin)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
-                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<BasePublicLogData>(result.Content, result.StatusCode, result.RequestId, loginReqDTO?.PublicLogData?.PublicReqId));
+                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<BasePublicLogData>(result.Content, result.StatusCode, result.RequestId, basePublicLog?.PublicLogData?.PublicReqId));
                 }
-                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<FaraboomLoginOutput>(result?.Content, result.StatusCode, result?.RequestId, loginReqDTO?.PublicLogData?.PublicReqId));
+                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<TokenRes>(result?.Content, result.StatusCode, result?.RequestId, basePublicLog?.PublicLogData?.PublicReqId));
             }
             catch (Exception ex)
             {

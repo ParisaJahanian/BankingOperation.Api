@@ -13,6 +13,15 @@ namespace BankingOperationsApi.Data.Repositories
         public IConfiguration _configuration { get; }
         private readonly ILogger<SatnaTransferRepository> _logger;
         private readonly FaraboomDbContext _dbContext;
+
+        public SatnaTransferRepository(IConfiguration configuration, ILogger<SatnaTransferRepository> logger,
+            FaraboomDbContext dbContext)
+        {
+            _configuration = configuration;
+            _logger = logger;
+            _dbContext = dbContext;
+        }
+
         public async Task<string> InsertSatnaRequestLog(SatnaRequestLogDTO satnaRequestLogDTO)
         {
             string requestId = Guid.NewGuid().ToString("N");
@@ -26,7 +35,7 @@ namespace BankingOperationsApi.Data.Repositories
                 ServiceId = satnaRequestLogDTO.serviceId,
                 PublicReqId = satnaRequestLogDTO.publicRequestId
             };
-            _dbContext.satnaReqLogs.Add(satnaReqLog);
+            _dbContext.SatnaReqLogs.Add(satnaReqLog);
             try
             {
                 await _dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -51,7 +60,7 @@ namespace BankingOperationsApi.Data.Repositories
                 ReqLogId = satnaResponseLogDTO.satnaRequestId,
                 ResCode = satnaResponseLogDTO.satnaResCode
             };
-            _dbContext.satnaResLogs.Add(satnaResLog);
+            _dbContext.SatnaResLogs.Add(satnaResLog);
             try
             {
                 await _dbContext.SaveChangesAsync().ConfigureAwait(false);

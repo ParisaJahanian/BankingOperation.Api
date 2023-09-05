@@ -5,10 +5,10 @@ namespace BankingOperationsApi.Data
 {
     public class FaraboomDbContext : DbContext
     {
-        public DbSet<SatnaReqLog> satnaReqLogs { get; set; }
-        public DbSet<SatnaResLog> satnaResLogs { get; set; }
-        public DbSet<PayaReqLog> payaReqLogs { get; set; }
-        public DbSet<PayaResLog> payaResLogs { get; set; }
+        public DbSet<SatnaReqLog> SatnaReqLogs { get; set; }
+        public DbSet<SatnaResLog> SatnaResLogs { get; set; }
+        public DbSet<PayaReqLog> PayaReqLogs { get; set; }
+        public DbSet<PayaResLog> PayaResLogs { get; set; }
 
         public FaraboomDbContext(DbContextOptions<FaraboomDbContext> dbContext) : base(dbContext)
         {

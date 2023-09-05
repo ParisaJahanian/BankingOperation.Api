@@ -1,6 +1,8 @@
 ﻿using BankingOperationsApi.ErrorHandling;
+using BankingOperationsApi.Exceptions;
 using BankingOperationsApi.Filters;
 using BankingOperationsApi.Infrastructure;
+using BankingOperationsApi.Models;
 using BankingOperationsApi.Services.PayaTransfer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,26 +31,27 @@ namespace BankingOperationsApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResDTO))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(LoginResDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(LoginResDTO))]
-        public async Task<ActionResult<LoginResDTO>> PayaTransferLogin(LoginReqDTO loginReqDTO)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenOutput))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(TokenOutput))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TokenOutput))]
+        public async Task<ActionResult<TokenOutput>> PayaTransferLogin(TokenInput tokenInput)
         {
-            var result = await _payaTransferService.LoginAsync(loginReqDTO);
-            try
-            {
-                if (result.StatusCode != "OK")
-                {
-                    _logger.LogError($"{nameof(BillCarElectronicTollsLogin)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
-                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<LoginReqDTO>(result.Content, result.StatusCode, result.RequestId, loginReqDTO?.PublicLogData?.PublicReqId));
-                }
-                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<LoginResDTO>(result?.Content, result.StatusCode, result?.RequestId, loginReqDTO?.PublicLogData?.PublicReqId));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Exception occurred while {nameof(BillCarElectronicTollsLogin)}");
-                throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(BillCarElectronicTollsLogin)} => {ex.Message}");
-            }
+            //var result = await _payaTransferService.(tokenInput);
+            //try
+            //{
+            //    if (result.StatusCode != "OK")
+            //    {
+            //        _logger.LogError($"{nameof(PayaTransferLogin)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
+            //        return BadRequest(_baseLog.ApiResponeFailByCodeProvider<tokenInput>(result.Content, result.StatusCode, result.RequestId, loginReqDTO?.PublicLogData?.PublicReqId));
+            //    }
+            //    return Ok(_baseLog.ApiResponseSuccessByCodeProvider<TokenOutput>(result?.Content, result.StatusCode, result?.RequestId, loginReqDTO?.PublicLogData?.PublicReqId));
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError(ex, $"Exception occurred while {nameof(PayaTransferLogin)}");
+            //    throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(PayaTransferLogin)} => {ex.Message}");
+            //}
+            return BadRequest();
         }
 
     }

@@ -1,6 +1,6 @@
 ﻿namespace BankingOperationsApi.Data.Entities
 {
-    public class PayaReqLog
+    public class PayaReqLog : BaseEntity<String>
     {
         public PayaReqLog()
         {

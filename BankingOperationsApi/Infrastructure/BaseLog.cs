@@ -1,6 +1,7 @@
 ﻿
 using BankingOperationsApi.Data.Repositories;
 using BankingOperationsApi.ErrorHandling;
+using BankingOperationsApi.Infrastructure.Extension;
 using BankingOperationsApi.Models;
 using Newtonsoft.Json;
 
@@ -23,7 +24,7 @@ namespace BankingOperationsApi.Infrastructure
         {
             var codeProvider = new ErrorCodesProvider();
             codeProvider = codeProvider.errorCodesResponseResult(statusCode.ToString());
-            _satnaTransferRepository.InsertCarTollsResponseLog(new SatnaResponseLogDTO
+            _satnaTransferRepository.InsertSatnaResponseLog(new SatnaResponseLogDTO
                 (publicReqId, Convert.ToString(response), codeProvider?.OutReponseCode.ToString(),
                 RequestId, codeProvider?.SafeReponseCode.ToString()));
             return ServiceHelperExtension.GenerateApiErrorResponse<ErrorResult>(codeProvider);

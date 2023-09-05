@@ -1,6 +1,7 @@
 ﻿namespace BankingOperationsApi.Data.Entities
 {
-    public class PayaResLog
+    public class PayaResLog : BaseEntity<string>
+
     {
         public string ResCode { get; set; }
         public string HTTPStatusCode { get; set; }

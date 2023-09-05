@@ -25,6 +25,8 @@ namespace BankingOperationsApi.ErrorHandling
         [Description("خطای داخلی در کانکشن دیتابیس.")]
         InternalDBConnectionError = 1012,
 
+        [Description("خطا در فراخوانی سرویس های ساتنای فرابوم.")]
+        SatnaTransferApiError = 1070,
 
         [Description("عملیات با موفقیت انجام شد")]
         Success = 0,
