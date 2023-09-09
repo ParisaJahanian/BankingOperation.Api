@@ -2,13 +2,13 @@
 {
     public sealed class AccessTokenEntity
     {
-        //public string Id { get; set; }
-        //public DateTime TokenDateTime { get; set; }
-        //public string AccessToken { get; set; }
+        public string Id { get; set; }
+        public DateTime TokenDateTime { get; set; }
+        public string AccessToken { get; set; }
 
-        //public override string ToString()
-        //{
-        //    return base.ToString();
-        //}
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

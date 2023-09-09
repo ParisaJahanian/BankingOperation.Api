@@ -6,6 +6,7 @@ using BankingOperationsApi.Models;
 using BankingOperationsApi.Services.SatnaTransfer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
 
 namespace BankingOperationsApi.Controllers
 {
@@ -52,7 +53,29 @@ namespace BankingOperationsApi.Controllers
                 throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(SatnaTransferLogin)} => {ex.Message}");
             }
         }
-
+        [AllowAnonymous]
+        [HttpPost("Tranfer")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenRes))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(TokenRes))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TokenRes))]
+        public async Task<ActionResult<TokenRes>> SatnaTransfer(SatnaTransferReqDTO transferReqDTO)
+        {
+            var result = await _satnaTransferService.SatnaTransferAsync(transferReqDTO);
+            try
+            {
+                if (result.StatusCode != "OK")
+                {
+                    _logger.LogError($"{nameof(SatnaTransfer)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
+                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<BasePublicLogData>(result.Content, result.StatusCode, result.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+                }
+                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<TokenRes>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception occurred while {nameof(SatnaTransfer)}");
+                throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(SatnaTransfer)} => {ErrorCode.SatnaTransferApiError.GetDisplayName()}");
+            }
+        }
 
 
     }

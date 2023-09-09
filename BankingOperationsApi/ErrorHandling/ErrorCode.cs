@@ -4,6 +4,18 @@ namespace BankingOperationsApi.ErrorHandling
 {
     public enum ErrorCode
     {
+        [Description("عملیات با موفقیت انجام شد")]
+        Success = 0,
+
+        [Description("خطایی در سرور رخ داده است")]
+        ServerError = 1,
+
+        [Description("پارامتر های ارسالی معتبر نیستند")]
+        BadRequest = 2,
+
+        [Description("یافت نشد")]
+        NotFound = 3,
+
         [Description("خطای داخلی .")]
         InternalError = 1001,
 
@@ -28,17 +40,10 @@ namespace BankingOperationsApi.ErrorHandling
         [Description("خطا در فراخوانی سرویس های ساتنای فرابوم.")]
         SatnaTransferApiError = 1070,
 
-        [Description("عملیات با موفقیت انجام شد")]
-        Success = 0,
+        [Description("خطا در به روز رسانی توکنهای ساتنای فرابوم.")]
+        SatnaTransferTokenApiError = 1071,
 
-        [Description("خطایی در سرور رخ داده است")]
-        ServerError = 1,
 
-        [Description("پارامتر های ارسالی معتبر نیستند")]
-        BadRequest = 2,
-
-        [Description("یافت نشد")]
-        NotFound = 3,
     }
 }
 

@@ -24,7 +24,9 @@ namespace BankingOperationsApi.Infrastructure.Extension
             request.Headers.Add("Accept", "application/json");
         }
 
-        public static void AddFaraboomCommonHeader(this HttpRequestMessage request, FaraboomOptions options)
+
+
+        public static void AddFaraboomTokenHeader(this HttpRequestMessage request, FaraboomOptions options)
         {
             request.Headers.Add("Device-Id", options.DeviceId);
             request.Headers.Add("App-Key", options.AppKey);
@@ -39,6 +41,22 @@ namespace BankingOperationsApi.Infrastructure.Extension
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Cookie", options.Cookie);
             request.Headers.Add("Authorization", "Basic " + options.Authorization);
+        }
+        public static void AddFaraboomCommonHeader(this HttpRequestMessage request, FaraboomOptions options, string token)
+        {
+            request.Headers.Add("Device-Id", options.DeviceId);
+            request.Headers.Add("App-Key", options.AppKey);
+            request.Headers.Add("Token-Id", options.TokenId);
+            request.Headers.Add("Client-Ip-Address", "127.0.0.1");
+            request.Headers.Add("Client-Platform-Type", "WEB");
+            request.Headers.Add("Client-Device-Id", options.DeviceId);
+            request.Headers.Add("Bank-Id", options.BankId);
+            request.Headers.Add("Client-User-Id", "09120000000");
+            request.Headers.Add("Client-User-Agent", $"{typeof(StartupBase).Assembly.GetName().Version}");
+            request.Headers.Add("Accept-Language", "fa");
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Cookie", options.Cookie);
+            request.Headers.Add("Authorization", "Bearer " + token);
         }
         public static FormUrlEncodedContent LoginFormUrlEncodedContent(FaraboomOptions options)
         {

@@ -9,7 +9,7 @@ namespace BankingOperationsApi.Data
         public DbSet<SatnaResLog> SatnaResLogs { get; set; }
         public DbSet<PayaReqLog> PayaReqLogs { get; set; }
         public DbSet<PayaResLog> PayaResLogs { get; set; }
-
+        public DbSet<AccessTokenEntity> AccessTokens { get; set; }
         public FaraboomDbContext(DbContextOptions<FaraboomDbContext> dbContext) : base(dbContext)
         {
             

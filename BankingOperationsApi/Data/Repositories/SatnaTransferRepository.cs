@@ -4,6 +4,7 @@ using BankingOperationsApi.ErrorHandling;
 using BankingOperationsApi.Exceptions;
 using BankingOperationsApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Extensions;
 using Oracle.ManagedDataAccess.Client;
 
 namespace BankingOperationsApi.Data.Repositories
@@ -71,6 +72,32 @@ namespace BankingOperationsApi.Data.Repositories
                 _logger.LogError(ex, $"Exception occurred while {nameof(InsertSatnaResponseLog)}");
                 throw new RamzNegarException(ErrorCode.InternalDBConnectionError, $"Exception occurred while: {nameof(InsertSatnaResponseLog)}");
             }
+        }
+
+        public async Task<AccessTokenEntity> AddOrUpdateSatnaTokenAsync(string? accesToken)
+        {
+            var query = _dbContext.AccessTokens.SingleOrDefault(i => i.Id == "6");
+            if (query is null)
+            {
+                query = new AccessTokenEntity();
+                query.Id = "6";
+                await _dbContext.AccessTokens.AddAsync(query).ConfigureAwait(false);
+            }
+            query.AccessToken = accesToken;
+            query.TokenDateTime = DateTime.UtcNow;
+            try
+            {
+                await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e,
+                    $"{nameof(AddOrUpdateSatnaTokenAsync)} -> applyUpdateToken in AddOrUpdateSatnaTokenAsync couldn't update.");
+                throw new RamzNegarException(ErrorCode.SatnaTransferTokenApiError, 
+                    $"Exception occurred while: {nameof(AddOrUpdateSatnaTokenAsync)}  => {ErrorCode.SatnaTransferTokenApiError.GetDisplayName()}");
+            }
+
+            return query;
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using BankingOperationsApi.ErrorHandling;
+using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
 namespace BankingOperationsApi.Models
 {
-    public record SatnaTransferRes
+    public class SatnaTransferRes  : ErrorResult
     {
         [JsonPropertyName("operation_time")]
         public long OperationTime { get; set; }

@@ -4,7 +4,7 @@ using BankingOperationsApi.Infrastructure.Extension;
 using BankingOperationsApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-
+using Microsoft.OpenApi.Extensions;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
@@ -29,7 +29,7 @@ namespace BankingOperationsApi.Services.SatnaTransfer
             {
                 var loginUri = new Uri(_faraboomOptions.TokenUrl, UriKind.RelativeOrAbsolute);
                 var request = new HttpRequestMessage(HttpMethod.Post, loginUri);
-                request.AddFaraboomCommonHeader(_faraboomOptions);
+                request.AddFaraboomTokenHeader(_faraboomOptions);
                 request.Content = ServiceHelperExtension.LoginFormUrlEncodedContent(_faraboomOptions);
                 _logger.LogInformation($"{nameof(GetTokenAsync)} - request is: \r\n {JsonSerializer.Serialize(request)}");
                 var response = await _httpClient.SendAsync(request)
@@ -39,36 +39,76 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                     JsonSerializer.Deserialize<TokenOutput>(responseBodyJson,
                         ServiceHelperExtension.JsonSerializerOptions);
 
-                if (response.IsSuccessStatusCode)
+
+                if (string.IsNullOrWhiteSpace(satnaLoginOutput?.AccessToken))
                 {
-                    if (string.IsNullOrWhiteSpace(satnaLoginOutput?.AccessToken))
-                    {
-                        //throw new FaraboomException(
-                        //    $"{nameof(GetTokenAsync)} =>with input:{JsonSerializer.Serialize(request)}=> {response.StatusCode}/{responseBodyJson}");
-                    }
-                    return new TokenRes()
-                    {
-                        AccessToken = satnaLoginOutput.AccessToken,
-                        ExpireTime = satnaLoginOutput.ExpireTime,
-                        //ExpirationDateTime =
-                        //    (DateTime.UtcNow.AddSeconds(paymanLosatnaLoLoginOutputginOutput.ExpireTime))
-                        IsSuccess = response.IsSuccessStatusCode,
-                        StatusCode=response.StatusCode.ToString(),
-                        RefreshToken = satnaLoginOutput.RefreshToken
-                    };
+                    //throw new FaraboomException(
+                    //    $"{nameof(GetTokenAsync)} =>with input:{JsonSerializer.Serialize(request)}=> {response.StatusCode}/{responseBodyJson}");
                 }
-                _logger.LogError($"{nameof(GetTokenAsync)} =>with input:{JsonSerializer.Serialize(request)}=> {response.StatusCode}/{responseBodyJson}");
-                throw new RamzNegarException(ErrorCode.SatnaTransferApiError,
-                    $"Unable to PaymanLogin appropriateResponse: {nameof(GetTokenAsync)} => {response.StatusCode}/{responseBodyJson}");
+                return new TokenRes()
+                {
+                    AccessToken = satnaLoginOutput.AccessToken ?? "",
+                    ExpireTime = satnaLoginOutput.ExpireTime,
+                    //ExpirationDateTime =
+                    //    (DateTime.UtcNow.AddSeconds(paymanLosatnaLoLoginOutputginOutput.ExpireTime))
+                    IsSuccess = response.IsSuccessStatusCode,
+                    StatusCode = response.StatusCode.ToString(),
+                    RefreshToken = satnaLoginOutput.RefreshToken ?? ""
+                };
+
+
             }
             catch (Exception e)
             {
                 _logger.LogError($"Unable to PaymanLogin appropriateResponse: {nameof(GetTokenAsync)}, cause of {e.Message}");
-                throw new RamzNegarException(ErrorCode.SatnaTransferApiError, $"Exception occurred while: {nameof(GetTokenAsync)} => {e.Message}");
+                throw new RamzNegarException(ErrorCode.SatnaTransferApiError,
+                    $"Exception occurred while: {nameof(GetTokenAsync)} => {ErrorCode.SatnaTransferApiError.GetDisplayName()}");
             }
 
         }
 
+        public async Task<SatnaTransferRes> GetSatnaTransferAsync(SatnaTransferReq satnaTransferReq)
+        {
+            //try
+            //{
+            //    var loginUri = new Uri(_faraboomOptions.SatnaTransferUrl, UriKind.RelativeOrAbsolute);
+            //    var request = new HttpRequestMessage(HttpMethod.Post, loginUri);
+            //    var token = await GetTokenAsync();
+            //    request.AddFaraboomCommonHeader(_faraboomOptions, token?.AccessToken);
+            //    _logger.LogInformation($"{nameof(GetSatnaTransferAsync)} - request is: \r\n {JsonSerializer.Serialize(request)}");
+            //    var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+            //    var responseBodyJson = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            //    var satnaLoginOutput =
+            //        JsonSerializer.Deserialize<SatnaTransferRes>(responseBodyJson,
+            //            ServiceHelperExtension.JsonSerializerOptions);
+            //    if (satnaLoginOutput is null)
+            //    {
+            //        _logger.LogError($"{nameof(GetSatnaTransferAsync)}");
+            //        //return ServiceHelperExtension.GenerateApiErrorResponse<SatnaTransferResDTO>();
+            //        return new SatnaTransferRes() { IsSuccess = false, ResultMessage = responseBodyJson , StatusCode= response.StatusCode.ToString() };
+            //    }
+
+            //    return new SatnaTransferRes()
+            //    {
+            //        StatusCode = response.StatusCode.ToString(),
+            //        ResultMessage = responseBodyJson,
+            //        IsSuccess = satnaLoginOutput.IsSuccess
+
+            //    };
+            //}
+            //catch (Exception e)
+            //{
+            //    _logger.LogError($"Unable to GetSatnaTransferAsync appropriateResponse: {nameof(GetSatnaTransferAsync)}, cause of {e.Message}");
+            //    throw new RamzNegarException(ErrorCode.SatnaTransferApiError,
+            //        $"Exception occurred while: {nameof(GetSatnaTransferAsync)} => {ErrorCode.SatnaTransferApiError.GetDisplayName()}");
+            //}
+
+            var response= await SatnaTransferSendAsync<SatnaTransferReq, SatnaTransferRes>
+                (_faraboomOptions.SatnaTransferUrl,HttpMethod.Post, satnaTransferReq);
+            return response;
+        }
+
+        #region private
         private async Task<TResponse> SatnaTransferSendAsync<TRequest, TResponse>(string uriString, HttpMethod method, TRequest request,
              [CallerMemberName] string callerMethodName = null) where TResponse : ErrorResult, new() where TRequest : class
         {
@@ -76,8 +116,8 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 var delay = TimeSpan.FromSeconds(20);
                 var cancellationToken = new CancellationTokenSource(delay).Token;
                 var requestHttpMessage = new HttpRequestMessage(method, uriString);
-
-                requestHttpMessage.AddFaraboomCommonHeader(_faraboomOptions);
+                var token = GetTokenAsync();
+                requestHttpMessage.AddFaraboomCommonHeader(_faraboomOptions,token.Result.AccessToken);
 
                 if (method == HttpMethod.Post && request != null)
                 {
@@ -137,7 +177,7 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 }
             }
         }
-       
+
         //private async Task<FaraboomTokenEntity> AddOrUpdateTokenAsync(FaraboomTokenResponse faraboomTokenResponse,
         //       FaraboomTokenEntity faraboomTokenEntity)
         //{
@@ -153,6 +193,6 @@ namespace BankingOperationsApi.Services.SatnaTransfer
         //    await _dbContext.SaveChangesAsync();
         //    return faraboomTokenEntity;
         //}
-
+        #endregion
     }
 }
