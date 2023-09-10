@@ -8,5 +8,6 @@ namespace BankingOperationsApi.Data.Repositories
         Task<string> InsertSatnaResponseLog(SatnaResponseLogDTO satnaResponseLogDTO);
         Task<string> InsertSatnaRequestLog(SatnaRequestLogDTO carTollsRequestLog);
         Task<AccessTokenEntity> AddOrUpdateSatnaTokenAsync(string? accesToken);
+        Task<string> FindAccessToken();
     }
 }

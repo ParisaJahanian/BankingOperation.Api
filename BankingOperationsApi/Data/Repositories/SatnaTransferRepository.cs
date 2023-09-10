@@ -74,16 +74,17 @@ namespace BankingOperationsApi.Data.Repositories
             }
         }
 
-        public async Task<AccessTokenEntity> AddOrUpdateSatnaTokenAsync(string? accesToken)
+        public async Task<AccessTokenEntity> AddOrUpdateSatnaTokenAsync(string? accessToken)
         {
             var query = _dbContext.AccessTokens.SingleOrDefault(i => i.Id == "6");
             if (query is null)
             {
                 query = new AccessTokenEntity();
                 query.Id = "6";
+                query.TokenName = "SatnaTranfer";
                 await _dbContext.AccessTokens.AddAsync(query).ConfigureAwait(false);
             }
-            query.AccessToken = accesToken;
+            query.AccessToken = accessToken;
             query.TokenDateTime = DateTime.UtcNow;
             try
             {
@@ -93,11 +94,18 @@ namespace BankingOperationsApi.Data.Repositories
             {
                 _logger.LogError(e,
                     $"{nameof(AddOrUpdateSatnaTokenAsync)} -> applyUpdateToken in AddOrUpdateSatnaTokenAsync couldn't update.");
-                throw new RamzNegarException(ErrorCode.SatnaTransferTokenApiError, 
+                throw new RamzNegarException(ErrorCode.SatnaTransferTokenApiError,
                     $"Exception occurred while: {nameof(AddOrUpdateSatnaTokenAsync)}  => {ErrorCode.SatnaTransferTokenApiError.GetDisplayName()}");
             }
 
             return query;
+        }
+
+        public async Task<string> FindAccessToken()
+        {
+            var query =await _dbContext.AccessTokens.
+                SingleOrDefaultAsync(i => i.Id == "6").ConfigureAwait(false);
+            return query?.AccessToken ?? string.Empty;
         }
     }
 }

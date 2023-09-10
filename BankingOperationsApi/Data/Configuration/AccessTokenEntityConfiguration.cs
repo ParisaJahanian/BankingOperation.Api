@@ -14,7 +14,7 @@ namespace BankingOperationsApi.Data.Configuration
             builder.Property(entity => entity.TokenDateTime).IsRequired().HasColumnName("TockenDateTime");
             builder.Property(entity => entity.Id).ValueGeneratedOnAdd();
             builder.Property(entity => entity.AccessToken).IsRequired().HasColumnName("accessTocken");
-
+            builder.Property(entity => entity.TokenName).IsRequired();
 
         }
     }

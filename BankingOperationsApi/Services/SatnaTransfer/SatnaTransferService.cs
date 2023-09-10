@@ -1,13 +1,10 @@
-﻿using Azure.Core;
-using Azure;
-using BankingOperationsApi.Models;
+﻿using BankingOperationsApi.Models;
 using AutoMapper;
-using BankingOperationsApi.Data;
 using BankingOperationsApi.Data.Repositories;
 using BankingOperationsApi.ErrorHandling;
 using BankingOperationsApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
-using System.Text.Json;
+
 
 namespace BankingOperationsApi.Services.SatnaTransfer
 {
@@ -42,6 +39,9 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 {
                     _ = await _satnaTransferRepository.AddOrUpdateSatnaTokenAsync(tokenResult?.AccessToken);
                 }
+                //var test = JsonSerializer.Deserialize<TokenOutput>(tokenResult?.ResultMessage,
+                //          ServiceHelperExtension.JsonSerializerOptions);
+                //  var mapped = _mapper.Map<TokenRes,TokenOutput>(tokenResult);
                 return new OutputModel
                 {
                     Content = tokenResult?.ResultMessage,
@@ -66,13 +66,13 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 SatnaRequestLogDTO satnaRequest = new SatnaRequestLogDTO(satnaTransferReqDTO.PublicLogData?.PublicReqId, satnaTransferReqDTO.ToString(),
                      satnaTransferReqDTO.PublicLogData?.UserId, satnaTransferReqDTO.PublicLogData?.PublicAppId, satnaTransferReqDTO.PublicLogData?.ServiceId);
                 string requestId = await _satnaTransferRepository.InsertSatnaRequestLog(satnaRequest);
-                var mapped = _mapper.Map<SatnaTransferReq>(satnaTransferReqDTO);
-                var result = _client.GetSatnaTransferAsync(mapped);
+                var satnaTransferReq = _mapper.Map<SatnaTransferReq>(satnaTransferReqDTO);
+                var result = _client.GetSatnaTransferAsync(satnaTransferReq);
                 return new OutputModel
                 {
-                     Content=result.Result.ToString(),
-                     RequestId = requestId,
-                     StatusCode= result.Result.StatusCode
+                    Content = result.Result.ToString(),
+                    RequestId = requestId,
+                    StatusCode = result.Result.StatusCode
                 };
             }
             catch (Exception e)

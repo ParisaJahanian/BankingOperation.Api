@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -15,7 +16,7 @@ builder.Services.AddDbContext<FaraboomDbContext>(options =>
 builder.Services.AddHttpClient<ISatnaTransferClient, SatnaTransferClient>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddFaraboomServices(builder.Configuration);
-builder.Services.AddAutoMapper(typeof(StartupBase));
+
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())

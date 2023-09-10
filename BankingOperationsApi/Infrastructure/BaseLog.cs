@@ -17,6 +17,7 @@ namespace BankingOperationsApi.Infrastructure
         public T ApiResponseSuccessByCodeProvider<T>(string response, string statusCode, string RequestId, string publicReqId) where T : new()
         {
             _satnaTransferRepository.InsertSatnaResponseLog(new SatnaResponseLogDTO(publicReqId, Convert.ToString(response), statusCode, RequestId, statusCode));
+           
             var responseResult = JsonConvert.DeserializeObject<T>(response);
             return responseResult;
         }

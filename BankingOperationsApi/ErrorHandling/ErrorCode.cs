@@ -43,6 +43,8 @@ namespace BankingOperationsApi.ErrorHandling
         [Description("خطا در به روز رسانی توکنهای ساتنای فرابوم.")]
         SatnaTransferTokenApiError = 1071,
 
+        [Description("توکن برای فراخوانی سرویس های ساتنا یافت نشد.")]
+        SatnaTokenApiError = 1080,
 
     }
 }

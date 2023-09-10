@@ -32,10 +32,10 @@ namespace BankingOperationsApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("Token")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenRes))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(TokenRes))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TokenRes))]
-        public async Task<ActionResult<TokenRes>> SatnaTransferLogin(BasePublicLogData basePublicLog)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenOutput))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(TokenOutput))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TokenOutput))]
+        public async Task<ActionResult<TokenOutput>> SatnaTransferLogin(BasePublicLogData basePublicLog)
         {
             var result = await _satnaTransferService.GetTokenAsync(basePublicLog);
             try
@@ -45,7 +45,8 @@ namespace BankingOperationsApi.Controllers
                     _logger.LogError($"{nameof(SatnaTransferLogin)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
                     return BadRequest(_baseLog.ApiResponeFailByCodeProvider<BasePublicLogData>(result.Content, result.StatusCode, result.RequestId, basePublicLog?.PublicLogData?.PublicReqId));
                 }
-                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<TokenRes>(result?.Content, result.StatusCode, result?.RequestId, basePublicLog?.PublicLogData?.PublicReqId));
+                
+                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<TokenOutput>(result?.Content, result.StatusCode, result?.RequestId, basePublicLog?.PublicLogData?.PublicReqId));
             }
             catch (Exception ex)
             {
@@ -55,10 +56,10 @@ namespace BankingOperationsApi.Controllers
         }
         [AllowAnonymous]
         [HttpPost("Tranfer")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenRes))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(TokenRes))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TokenRes))]
-        public async Task<ActionResult<TokenRes>> SatnaTransfer(SatnaTransferReqDTO transferReqDTO)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SatnaTransferRes))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(SatnaTransferRes))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(SatnaTransferRes))]
+        public async Task<ActionResult<SatnaTransferRes>> SatnaTransfer(SatnaTransferReqDTO transferReqDTO)
         {
             var result = await _satnaTransferService.SatnaTransferAsync(transferReqDTO);
             try
@@ -66,9 +67,9 @@ namespace BankingOperationsApi.Controllers
                 if (result.StatusCode != "OK")
                 {
                     _logger.LogError($"{nameof(SatnaTransfer)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
-                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<BasePublicLogData>(result.Content, result.StatusCode, result.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<SatnaTransferReqDTO>(result.Content, result.StatusCode, result.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
                 }
-                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<TokenRes>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<SatnaTransferRes>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
             }
             catch (Exception ex)
             {

@@ -1,8 +1,10 @@
-﻿using BankingOperationsApi.ErrorHandling;
+﻿using BankingOperationsApi.Data.Repositories;
+using BankingOperationsApi.ErrorHandling;
 using BankingOperationsApi.Exceptions;
 using BankingOperationsApi.Infrastructure.Extension;
 using BankingOperationsApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Extensions;
 using System.Runtime.CompilerServices;
@@ -16,12 +18,14 @@ namespace BankingOperationsApi.Services.SatnaTransfer
         private readonly ILogger<SatnaTransferClient> _logger;
         private readonly HttpClient _httpClient;
         private readonly FaraboomOptions _faraboomOptions;
+        private readonly ISatnaTransferRepository _repository;
         public SatnaTransferClient(HttpClient httpClient, ILogger<SatnaTransferClient> logger,
-            IOptions<FaraboomOptions> faraboomOptions)
+            IOptions<FaraboomOptions> faraboomOptions, ISatnaTransferRepository repository)
         {
             _httpClient = httpClient;
             _logger = logger;
             _faraboomOptions = faraboomOptions?.Value;
+            _repository = repository;
         }
         public async Task<TokenRes> GetTokenAsync()
         {
@@ -36,7 +40,7 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                     .ConfigureAwait(false);
                 var responseBodyJson = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 var satnaLoginOutput =
-                    JsonSerializer.Deserialize<TokenOutput>(responseBodyJson,
+                    JsonSerializer.Deserialize<TokenRes>(responseBodyJson,
                         ServiceHelperExtension.JsonSerializerOptions);
 
 
@@ -53,7 +57,9 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                     //    (DateTime.UtcNow.AddSeconds(paymanLosatnaLoLoginOutputginOutput.ExpireTime))
                     IsSuccess = response.IsSuccessStatusCode,
                     StatusCode = response.StatusCode.ToString(),
-                    RefreshToken = satnaLoginOutput.RefreshToken ?? ""
+                    RefreshToken = satnaLoginOutput.RefreshToken ?? "",
+                    ResultMessage = responseBodyJson
+
                 };
 
 
@@ -103,8 +109,8 @@ namespace BankingOperationsApi.Services.SatnaTransfer
             //        $"Exception occurred while: {nameof(GetSatnaTransferAsync)} => {ErrorCode.SatnaTransferApiError.GetDisplayName()}");
             //}
 
-            var response= await SatnaTransferSendAsync<SatnaTransferReq, SatnaTransferRes>
-                (_faraboomOptions.SatnaTransferUrl,HttpMethod.Post, satnaTransferReq);
+            var response = await SatnaTransferSendAsync<SatnaTransferReq, SatnaTransferRes>
+                (_faraboomOptions.SatnaTransferUrl, HttpMethod.Post, satnaTransferReq);
             return response;
         }
 
@@ -116,8 +122,14 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 var delay = TimeSpan.FromSeconds(20);
                 var cancellationToken = new CancellationTokenSource(delay).Token;
                 var requestHttpMessage = new HttpRequestMessage(method, uriString);
-                var token = GetTokenAsync();
-                requestHttpMessage.AddFaraboomCommonHeader(_faraboomOptions,token.Result.AccessToken);
+                var token =await _repository.FindAccessToken().ConfigureAwait(false);
+                if (token is null)
+                {
+                    _logger.LogError($"token is null in the FindAccessToken method ->{ErrorCode.NotFound.GetDisplayName()}");
+                    throw new RamzNegarException(ErrorCode.SatnaTokenApiError,
+                                  ErrorCode.SatnaTransferApiError.GetDisplayName());
+                }
+                requestHttpMessage.AddFaraboomCommonHeader(_faraboomOptions, token);
 
                 if (method == HttpMethod.Post && request != null)
                 {
@@ -132,17 +144,18 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 {
                     httpResponseMessage = await _httpClient.SendAsync(requestHttpMessage, cancellationToken)
                         .ConfigureAwait(false);
-
                 }
                 catch (TaskCanceledException e)
                 {
-                    throw new RamzNegarException(ErrorCode.SatnaTransferApiError, e.Message);
+                    throw new RamzNegarException(ErrorCode.SatnaTransferApiError, 
+                        ErrorCode.SatnaTransferApiError.GetDisplayName());
                 }
                 catch (Exception e)
                 {
                     _logger.LogError(e,
                         $"{callerMethodName} - request: '{request}' \r\n error message: {e.Message} ");
-                    throw new RamzNegarException(ErrorCode.SatnaTransferApiError, e.Message);
+                    throw new RamzNegarException(ErrorCode.SatnaTransferApiError,
+                                  ErrorCode.SatnaTransferApiError.GetDisplayName());
                 }
 
                 var responseContent = await (httpResponseMessage?.Content?.ReadAsStringAsync())
@@ -153,14 +166,17 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                     {
                         IsSuccess = false,
                         ResultMessage = responseContent,
+                        StatusCode= httpResponseMessage.StatusCode.ToString(),
                     };
 
                 try
                 {
                     var response = JsonSerializer.Deserialize<TResponse>(responseContent,
                         ServiceHelperExtension.JsonSerializerOptions);
-                    response ??= new TResponse() { IsSuccess = true };
+                    response ??= new TResponse() { IsSuccess = true , StatusCode=httpResponseMessage.StatusCode.ToString()};
                     response.IsSuccess = true;
+                    response.ResultMessage = responseContent;
+                    response.StatusCode = httpResponseMessage.StatusCode.ToString();
                     return response;
                 }
                 catch (JsonException e)

@@ -34,24 +34,24 @@ namespace BankingOperationsApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenOutput))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(TokenOutput))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TokenOutput))]
-        public async Task<ActionResult<TokenOutput>> PayaTransferLogin(TokenInput tokenInput)
+        public async Task<ActionResult<TokenOutput>> PayaTransferLogin(BasePublicLogData basePublicLog)
         {
-            //var result = await _payaTransferService.(tokenInput);
-            //try
-            //{
-            //    if (result.StatusCode != "OK")
-            //    {
-            //        _logger.LogError($"{nameof(PayaTransferLogin)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
-            //        return BadRequest(_baseLog.ApiResponeFailByCodeProvider<tokenInput>(result.Content, result.StatusCode, result.RequestId, loginReqDTO?.PublicLogData?.PublicReqId));
-            //    }
-            //    return Ok(_baseLog.ApiResponseSuccessByCodeProvider<TokenOutput>(result?.Content, result.StatusCode, result?.RequestId, loginReqDTO?.PublicLogData?.PublicReqId));
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex, $"Exception occurred while {nameof(PayaTransferLogin)}");
-            //    throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(PayaTransferLogin)} => {ex.Message}");
-            //}
-            return BadRequest();
+            var result = await _payaTransferService.(basePublicLog);
+            try
+            {
+                if (result.StatusCode != "OK")
+                {
+                    _logger.LogError($"{nameof(SatnaTransferLogin)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
+                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<BasePublicLogData>(result.Content, result.StatusCode, result.RequestId, basePublicLog?.PublicLogData?.PublicReqId));
+                }
+
+                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<TokenOutput>(result?.Content, result.StatusCode, result?.RequestId, basePublicLog?.PublicLogData?.PublicReqId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception occurred while {nameof(SatnaTransferLogin)}");
+                throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(SatnaTransferLogin)} => {ex.Message}");
+            }
         }
 
     }
