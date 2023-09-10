@@ -1,8 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using BankingOperationsApi.ErrorHandling;
+using System.Text.Json.Serialization;
 
 namespace BankingOperationsApi.Models
 {
-    public record PayaTransferRes
+    public class PayaTransferRes : ErrorResult
     {
         [JsonPropertyName("operation_time")]
         public long OperationTime { get; set; }

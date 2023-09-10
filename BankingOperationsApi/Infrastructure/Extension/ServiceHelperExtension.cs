@@ -4,6 +4,10 @@ using BankingOperationsApi.ErrorHandling;
 using BankingOperationsApi.Models;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.AspNetCore.Hosting;
+using BankingOperationsApi.Exceptions;
+using System.Net.Http;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace BankingOperationsApi.Infrastructure.Extension
 {
@@ -23,9 +27,6 @@ namespace BankingOperationsApi.Infrastructure.Extension
         {
             request.Headers.Add("Accept", "application/json");
         }
-
-
-
         public static void AddFaraboomTokenHeader(this HttpRequestMessage request, FaraboomOptions options)
         {
             request.Headers.Add("Device-Id", options.DeviceId);
@@ -80,15 +81,16 @@ namespace BankingOperationsApi.Infrastructure.Extension
             };
         }
 
-        public static T GenerateErrorMethodResponse<T>(ErrorCode errorCode, string RequestId) where T : OutputModel, new()
+        public static T GenerateErrorMethodResponse<T>(ErrorCode errorCode) where T : ErrorResult, new()
         {
             return new T
             {
                 StatusCode = errorCode.ToString(),
-                RequestId = RequestId,
-                Content = errorCode.GetDisplayName(),
+                IsSuccess = false,
+                ResultMessage = errorCode.GetDisplayName()
             };
         }
 
     }
+
 }

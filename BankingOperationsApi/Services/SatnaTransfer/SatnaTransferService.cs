@@ -41,7 +41,8 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 }
                 //var test = JsonSerializer.Deserialize<TokenOutput>(tokenResult?.ResultMessage,
                 //          ServiceHelperExtension.JsonSerializerOptions);
-                //  var mapped = _mapper.Map<TokenRes,TokenOutput>(tokenResult);
+                 var tokenOutput = _mapper.Map<TokenOutput>(tokenResult);
+               
                 return new OutputModel
                 {
                     Content = tokenResult?.ResultMessage,

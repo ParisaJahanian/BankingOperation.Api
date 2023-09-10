@@ -9,7 +9,7 @@ using Oracle.ManagedDataAccess.Client;
 
 namespace BankingOperationsApi.Data.Repositories
 {
-    public class SatnaTransferRepository : ISatnaTransferRepository
+    public class SatnaTransferRepository : BaseRepository, ISatnaTransferRepository 
     {
         public IConfiguration _configuration { get; }
         private readonly ILogger<SatnaTransferRepository> _logger;
@@ -100,12 +100,6 @@ namespace BankingOperationsApi.Data.Repositories
 
             return query;
         }
-
-        public async Task<string> FindAccessToken()
-        {
-            var query =await _dbContext.AccessTokens.
-                SingleOrDefaultAsync(i => i.Id == "6").ConfigureAwait(false);
-            return query?.AccessToken ?? string.Empty;
-        }
+      
     }
 }

@@ -1,4 +1,5 @@
-﻿using BankingOperationsApi.Models;
+﻿using BankingOperationsApi.Data.Entities;
+using BankingOperationsApi.Models;
 
 namespace BankingOperationsApi.Data.Repositories
 {
@@ -6,5 +7,6 @@ namespace BankingOperationsApi.Data.Repositories
     {
         Task<string> InsertPayaResponseLog(PayaResponseLogDTO payaResponseLogDTO);
         Task<string> InsertPayaRequestLog(PayaRequestLogDTO payaRequestLogDTO);
+        Task<AccessTokenEntity> AddOrUpdatePayaTokenAsync(string? accesToken);
     }
 }

@@ -26,26 +26,31 @@ namespace BankingOperationsApi.ErrorHandling
         InternalSerializeError = 1003,
 
         [Description("شناسه درخواست تکراری است.")]
-        DuplicateRequestId = 1040,
+        DuplicateRequestId = 1004,
 
         [Description("پارامتر ورودی نامعتبر است.")]
-        InputNotValid = 1050,
+        InputNotValid = 1005,
 
         [Description("پارامتر کوکی نامعتبر است.")]
-        CookieNotValid = 1060,
+        CookieNotValid = 1006,
 
         [Description("خطای داخلی در کانکشن دیتابیس.")]
-        InternalDBConnectionError = 1012,
+        InternalDBConnectionError = 1007,
 
         [Description("خطا در فراخوانی سرویس های ساتنای فرابوم.")]
-        SatnaTransferApiError = 1070,
+        SatnaTransferApiError = 1008,
 
         [Description("خطا در به روز رسانی توکنهای ساتنای فرابوم.")]
-        SatnaTransferTokenApiError = 1071,
+        SatnaTransferTokenApiError = 1009,
 
         [Description("توکن برای فراخوانی سرویس های ساتنا یافت نشد.")]
-        SatnaTokenApiError = 1080,
+        SatnaTokenApiError = 1010,
 
+        [Description("خطا در فراخوانی سرویس های پایای فرابوم.")]
+        PayaTransferApiError = 1011,
+
+        [Description("توکن برای فراخوانی سرویس های پایا یافت نشد.")]
+        PayaTransferTokenApiError = 1012,
     }
 }
 

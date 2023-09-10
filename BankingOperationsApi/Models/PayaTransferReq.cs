@@ -16,12 +16,6 @@ namespace BankingOperationsApi.Models
         [JsonPropertyName("source_deposit_number")]
         public string SourceDepositNumber { get; set; }
 
-        [JsonPropertyName("ReceiverName")]
-        public string ReceiverName { get; set; }
-
-        [JsonPropertyName("receiver_family")]
-        public string ReceiverFamily { get; set; }
-
         [JsonPropertyName("description")]
         public string Description { get; set; }
     }
