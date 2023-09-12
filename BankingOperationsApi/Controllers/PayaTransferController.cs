@@ -13,7 +13,7 @@ namespace BankingOperationsApi.Controllers
 {
     [ApiController]
     [ApiVersion("1")]
-    [Route("Bill/v1/[controller]")]
+    [Route("Faraboom/v1/[controller]")]
     [ApiExplorerSettings]
     [ApiResultFilterAttribute]
     public class PayaTransferController : ControllerBase
