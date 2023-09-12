@@ -42,10 +42,10 @@ namespace BankingOperationsApi.Infrastructure.Extension
             services.Configure<FaraboomOptions>(configuration.GetSection(FaraboomOptions.SectionName));
             services.AddScoped<IPayaTransferClient, PayaTransferClient>();
             services.AddScoped<IPayaTransferService, PayaTransferService>();
-            //services.AddScoped<ISatnaTransferClient, SatnaTransferClient>();
             services.AddScoped<ISatnaTransferService, SatnaTransferService>();
             services.AddScoped<IPayaTransferRepository, PayaTransferRepository>();
             services.AddScoped<ISatnaTransferRepository, SatnaTransferRepository>();
+            services.AddScoped<IBaseRepository, BaseRepository>();
             services.AddScoped<BaseLog>();
             return services;
         }

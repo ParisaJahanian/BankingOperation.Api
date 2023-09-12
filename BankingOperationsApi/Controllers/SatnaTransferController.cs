@@ -31,7 +31,7 @@ namespace BankingOperationsApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("Token")]
+        [HttpPost("token")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenOutput))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(TokenOutput))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TokenOutput))]
@@ -55,7 +55,7 @@ namespace BankingOperationsApi.Controllers
             }
         }
         [AllowAnonymous]
-        [HttpPost("Tranfer")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SatnaTransferRes))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(SatnaTransferRes))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(SatnaTransferRes))]
@@ -74,7 +74,7 @@ namespace BankingOperationsApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Exception occurred while {nameof(SatnaTransfer)}");
-                throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(SatnaTransfer)} => {ErrorCode.SatnaTransferApiError.GetDisplayName()}");
+                throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(SatnaTransfer)} => {ErrorCode.FaraboomTransferApiError.GetDisplayName()}");
             }
         }
 

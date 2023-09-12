@@ -10,7 +10,7 @@ namespace BankingOperationsApi.Models
         [JsonPropertyName("owner_name")]
         public string OwnerName { get; set; }
 
-        [JsonPropertyName("Amount")]
+        [JsonPropertyName("amount")]
         public string Amount { get; set; }
 
         [JsonPropertyName("source_deposit_number")]

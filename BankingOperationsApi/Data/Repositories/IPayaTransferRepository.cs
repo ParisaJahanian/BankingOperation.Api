@@ -7,6 +7,6 @@ namespace BankingOperationsApi.Data.Repositories
     {
         Task<string> InsertPayaResponseLog(PayaResponseLogDTO payaResponseLogDTO);
         Task<string> InsertPayaRequestLog(PayaRequestLogDTO payaRequestLogDTO);
-        Task<AccessTokenEntity> AddOrUpdatePayaTokenAsync(string? accesToken);
+        //Task<AccessTokenEntity> AddOrUpdatePayaTokenAsync(string? accesToken);
     }
 }

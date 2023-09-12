@@ -3,11 +3,6 @@ using System.Text.Json;
 using BankingOperationsApi.ErrorHandling;
 using BankingOperationsApi.Models;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.AspNetCore.Hosting;
-using BankingOperationsApi.Exceptions;
-using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace BankingOperationsApi.Infrastructure.Extension
 {

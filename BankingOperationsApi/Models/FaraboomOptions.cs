@@ -16,7 +16,7 @@
         public string TokenUrl { get; set; }
         public string SatnaTransferUrl { get; set; }
         public string PayaTransferUrl { get; set; }
-        public string PayaBatchTranferUrl { get; set; }
+        public string PayaBatchTransferUrl { get; set; }
         public string PayaCancelUrl { get; set; }
         public string Authorization { get; set; }
 

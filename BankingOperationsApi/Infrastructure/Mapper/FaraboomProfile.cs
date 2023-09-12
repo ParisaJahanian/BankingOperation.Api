@@ -8,12 +8,10 @@ namespace BankingOperationsApi.Infrastructure.Mapper
         public FaraboomProfile()
         {
             CreateMap<SatnaTransferReqDTO, SatnaTransferReq>().ReverseMap();
-            CreateMap<SatnaTransferReq, SatnaTransferReqDTO>().ReverseMap();
-            //CreateMap<TokenRes,TokenOutput>().ReverseMap();
-            //CreateMap<TokenRes, TokenOutput>()
-            //            .ForMember(dest => dest.ExpireTime, opt => opt.MapFrom(src => src.ExpireTime));
-            //CreateMap<TokenRes, TokenOutput>()
-            //          .ForMember(dest => dest.access_token, opt => opt.MapFrom(src => src.AccessToken));
+            CreateMap<PayaTransferReq, PayaTransferReqDTO>().ReverseMap();
+            CreateMap<PayaBatchTransferReq, PayaBatchTransferReqDTO>().ReverseMap();
+            CreateMap<TokenRes,TokenOutput>().ReverseMap();
+       
         }
     }
 }

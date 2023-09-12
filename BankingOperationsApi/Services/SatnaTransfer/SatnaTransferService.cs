@@ -4,7 +4,7 @@ using BankingOperationsApi.Data.Repositories;
 using BankingOperationsApi.ErrorHandling;
 using BankingOperationsApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
-
+using System.Text.Json;
 
 namespace BankingOperationsApi.Services.SatnaTransfer
 {
@@ -16,15 +16,18 @@ namespace BankingOperationsApi.Services.SatnaTransfer
         private readonly ILogger<SatnaTransferService> _logger;
         private IConfiguration _configuration { get; set; }
         private ISatnaTransferRepository _satnaTransferRepository { get; set; }
+        private IBaseRepository _baseRepository{ get; set; }
+
         public SatnaTransferService(IMapper mapper, ILogger<SatnaTransferService> logger,
             IConfiguration configuration, ISatnaTransferClient client,
-            ISatnaTransferRepository satnaTransferRepository)
+            ISatnaTransferRepository satnaTransferRepository, IBaseRepository baseRepository)
         {
             _mapper = mapper;
             _logger = logger;
             _configuration = configuration;
             _client = client;
             _satnaTransferRepository = satnaTransferRepository;
+            _baseRepository = baseRepository;
         }
         public async Task<OutputModel> GetTokenAsync(BasePublicLogData basePublicLogData)
         {
@@ -37,24 +40,21 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 var tokenResult = await _client.GetTokenAsync();
                 if (tokenResult != null && tokenResult.IsSuccess)
                 {
-                    _ = await _satnaTransferRepository.AddOrUpdateSatnaTokenAsync(tokenResult?.AccessToken);
+                    _ = await _baseRepository.AddOrUpdateTokenAsync(tokenResult?.AccessToken);
                 }
-                //var test = JsonSerializer.Deserialize<TokenOutput>(tokenResult?.ResultMessage,
-                //          ServiceHelperExtension.JsonSerializerOptions);
-                 var tokenOutput = _mapper.Map<TokenOutput>(tokenResult);
-               
+                var tokenOutput = _mapper.Map<TokenOutput>(tokenResult);
                 return new OutputModel
                 {
-                    Content = tokenResult?.ResultMessage,
+                    Content = JsonSerializer.Serialize(tokenOutput),
                     RequestId = requestId,
-                    StatusCode = tokenResult.StatusCode,
+                    StatusCode = tokenResult?.StatusCode,
                 };
             }
             catch (Exception e)
             {
                 _logger.LogError(e, $"Exception occurred while {nameof(GetTokenAsync)}");
-                throw new RamzNegarException(ErrorCode.SatnaTransferApiError,
-                    $"Exception occurred while: {nameof(GetTokenAsync)} => {ErrorCode.SatnaTransferApiError.GetDisplayName()}");
+                throw new RamzNegarException(ErrorCode.FaraboomTransferApiError,
+                    $"Exception occurred while: {nameof(GetTokenAsync)} => {ErrorCode.FaraboomTransferApiError.GetDisplayName()}");
             }
 
         }
@@ -79,8 +79,8 @@ namespace BankingOperationsApi.Services.SatnaTransfer
             catch (Exception e)
             {
                 _logger.LogError(e, $"Exception occurred while {nameof(SatnaTransferAsync)}");
-                throw new RamzNegarException(ErrorCode.SatnaTransferApiError,
-                    $"Exception occurred while: {nameof(SatnaTransferAsync)} => {ErrorCode.SatnaTransferApiError.GetDisplayName()}");
+                throw new RamzNegarException(ErrorCode.FaraboomTransferApiError,
+                    $"Exception occurred while: {nameof(SatnaTransferAsync)} => {ErrorCode.FaraboomTransferApiError.GetDisplayName()}");
             }
         }
     }

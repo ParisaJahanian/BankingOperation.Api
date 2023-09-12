@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace BankingOperationsApi.Models
 {
-    public class PayaTransferRes : ErrorResult
+    public class PayaBatchTransferRes : ErrorResult
     {
         [JsonPropertyName("operation_time")]
         public long OperationTime { get; set; }
@@ -11,17 +11,28 @@ namespace BankingOperationsApi.Models
         [JsonPropertyName("ref_id")]
         public string RefId { get; set; }
 
+        [JsonPropertyName("transfer_description")]
+        public string TransferDeescription { get; set; }
+
         [JsonPropertyName("reference_id")]
         public string ReferenceId { get; set; }
+
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
 
         [JsonPropertyName("source_iban_number")]
         public string SourceIbanNumber { get; set; }
 
-        [JsonPropertyName("currency")]
-        public string Currency { get; set; }
+        [JsonPropertyName("transactions")]
+        public ICollection<Transactions> Transactions { get; set; }
 
-        [JsonPropertyName("transfer_status")]
-        public string TransferStatus { get; set; }
+        [JsonPropertyName("instant_debit")]
+        public bool InstantDebit { get; set; }
+    }
+    public class Transactions
+    {
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
 
         [JsonPropertyName("iban_number")]
         public string IbanNumber { get; set; }
@@ -29,18 +40,16 @@ namespace BankingOperationsApi.Models
         [JsonPropertyName("owner_name")]
         public string OwnerName { get; set; }
 
+        [JsonPropertyName("factor_number")]
+        public string FactorNumber { get; set; }
+
         [JsonPropertyName("amount")]
         public int Amount { get; set; }
 
         [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [JsonPropertyName("transaction_status")]
-        public string TransactionStatus { get; set; }
-
-        [JsonPropertyName("instant_debit")]
-        public bool InstantDebit { get; set; }
-
-
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
     }
 }

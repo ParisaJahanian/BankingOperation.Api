@@ -75,12 +75,12 @@ namespace BankingOperationsApi.Data.Repositories
 
         public async Task<AccessTokenEntity> AddOrUpdatePayaTokenAsync(string? accessToken)
         {
-            var query = _dbContext.AccessTokens.SingleOrDefault(i => i.Id == "7");
+            var query = _dbContext.AccessTokens.SingleOrDefault(i => i.Id == "6");
             if (query is null)
             {
                 query = new AccessTokenEntity();
-                query.Id = "7";
-                query.TokenName = "PayaTransfer";
+                query.Id = "6";
+                query.TokenName = "FaraboomTransfer";
                 await _dbContext.AccessTokens.AddAsync(query).ConfigureAwait(false);
             }
             query.AccessToken = accessToken;
@@ -93,8 +93,8 @@ namespace BankingOperationsApi.Data.Repositories
             {
                 _logger.LogError(e,
                     $"{nameof(AddOrUpdatePayaTokenAsync)} -> applyUpdateToken in AddOrUpdatePayaTokenAsync couldn't update.");
-                throw new RamzNegarException(ErrorCode.SatnaTransferTokenApiError,
-                    $"Exception occurred while: {nameof(AddOrUpdatePayaTokenAsync)}  => {ErrorCode.SatnaTransferTokenApiError.GetDisplayName()}");
+                throw new RamzNegarException(ErrorCode.FaraboomTransferTokenApiError,
+                    $"Exception occurred while: {nameof(AddOrUpdatePayaTokenAsync)}  => {ErrorCode.FaraboomTransferTokenApiError.GetDisplayName()}");
             }
 
             return query;

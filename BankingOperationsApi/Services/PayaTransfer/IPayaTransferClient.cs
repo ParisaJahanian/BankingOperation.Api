@@ -6,5 +6,7 @@ namespace BankingOperationsApi.Services.PayaTransfer
     {
         Task<TokenRes> GetTokenAsync();
         Task<PayaTransferRes> GetPayaTransferAsync(PayaTransferReq payaTransferReq);
+        Task<PayaBatchTransferRes> GetPayaBatchTransferAsync(PayaBatchTransferReq payaTransferReq);
+        Task<PayaTransferCancellationRes> GetPayaTransferCancellationAsync(PayaTransferCancellationReq payaTransferReq);
     }
 }

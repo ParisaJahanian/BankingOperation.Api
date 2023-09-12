@@ -37,20 +37,16 @@ namespace BankingOperationsApi.ErrorHandling
         [Description("خطای داخلی در کانکشن دیتابیس.")]
         InternalDBConnectionError = 1007,
 
-        [Description("خطا در فراخوانی سرویس های ساتنای فرابوم.")]
-        SatnaTransferApiError = 1008,
+        [Description("خطا در فراخوانی سرویس های فرابوم.")]
+        FaraboomTransferApiError = 1008,
 
-        [Description("خطا در به روز رسانی توکنهای ساتنای فرابوم.")]
-        SatnaTransferTokenApiError = 1009,
+        [Description("خطا در به روز رسانی توکنهای فرابوم.")]
+        FaraboomTransferTokenApiError = 1009,
 
-        [Description("توکن برای فراخوانی سرویس های ساتنا یافت نشد.")]
-        SatnaTokenApiError = 1010,
+        [Description("توکن برای فراخوانی سرویس های فرابوم یافت نشد.")]
+        TokenNotFound = 1010,
 
-        [Description("خطا در فراخوانی سرویس های پایای فرابوم.")]
-        PayaTransferApiError = 1011,
-
-        [Description("توکن برای فراخوانی سرویس های پایا یافت نشد.")]
-        PayaTransferTokenApiError = 1012,
+      
     }
 }
 

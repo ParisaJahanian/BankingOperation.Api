@@ -3,20 +3,21 @@ using BankingOperationsApi.Data.Entities;
 using BankingOperationsApi.ErrorHandling;
 using BankingOperationsApi.Exceptions;
 using BankingOperationsApi.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Extensions;
 using Oracle.ManagedDataAccess.Client;
 
 namespace BankingOperationsApi.Data.Repositories
 {
-    public class SatnaTransferRepository : BaseRepository, ISatnaTransferRepository 
+    public class SatnaTransferRepository : ISatnaTransferRepository 
     {
         public IConfiguration _configuration { get; }
+
         private readonly ILogger<SatnaTransferRepository> _logger;
+
         private readonly FaraboomDbContext _dbContext;
 
-        public SatnaTransferRepository(IConfiguration configuration, ILogger<SatnaTransferRepository> logger,
-            FaraboomDbContext dbContext)
+        public SatnaTransferRepository(IConfiguration configuration,
+            ILogger<SatnaTransferRepository> logger, FaraboomDbContext dbContext)
         {
             _configuration = configuration;
             _logger = logger;
@@ -74,32 +75,6 @@ namespace BankingOperationsApi.Data.Repositories
             }
         }
 
-        public async Task<AccessTokenEntity> AddOrUpdateSatnaTokenAsync(string? accessToken)
-        {
-            var query = _dbContext.AccessTokens.SingleOrDefault(i => i.Id == "6");
-            if (query is null)
-            {
-                query = new AccessTokenEntity();
-                query.Id = "6";
-                query.TokenName = "SatnaTranfer";
-                await _dbContext.AccessTokens.AddAsync(query).ConfigureAwait(false);
-            }
-            query.AccessToken = accessToken;
-            query.TokenDateTime = DateTime.UtcNow;
-            try
-            {
-                await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e,
-                    $"{nameof(AddOrUpdateSatnaTokenAsync)} -> applyUpdateToken in AddOrUpdateSatnaTokenAsync couldn't update.");
-                throw new RamzNegarException(ErrorCode.SatnaTransferTokenApiError,
-                    $"Exception occurred while: {nameof(AddOrUpdateSatnaTokenAsync)}  => {ErrorCode.SatnaTransferTokenApiError.GetDisplayName()}");
-            }
-
-            return query;
-        }
-      
+       
     }
 }

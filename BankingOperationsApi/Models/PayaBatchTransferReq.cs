@@ -15,7 +15,7 @@ namespace BankingOperationsApi.Models
         public bool IgnoreError { get; set; }
 
         [JsonPropertyName("transactions")]
-        public Transaction[] Transactions { get; set; }
+        public List<Transaction> Transactions { get; set; }
     }
    
 
