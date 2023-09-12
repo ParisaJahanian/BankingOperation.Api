@@ -1,9 +1,7 @@
-using BankingOperationsApi.Data;
+﻿using BankingOperationsApi.Data;
 using BankingOperationsApi.Infrastructure.Extension;
 using BankingOperationsApi.Services.SatnaTransfer;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(typeof(Program));
@@ -21,14 +19,16 @@ builder.Services.AddFaraboomServices(builder.Configuration);
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
+app.UseStaticFiles();
+app.UseSwagger();
+app.UseSwaggerUI(c=>c.SwaggerEndpoint("/swagger/v1/swagger.json", $" پنل سرویس های فرابوم"));
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseEndpoints(endpoints =>
