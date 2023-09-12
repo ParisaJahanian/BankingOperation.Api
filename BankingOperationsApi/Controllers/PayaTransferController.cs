@@ -59,10 +59,10 @@ namespace BankingOperationsApi.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PayaTransferRes))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PayaTransferRes))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(PayaTransferRes))]
-        public async Task<ActionResult<PayaTransferRes>> PayaTransfer(PayaTransferReqDTO transferReqDTO)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PayaTransferResDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PayaTransferResDTO))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(PayaTransferResDTO))]
+        public async Task<ActionResult<PayaTransferResDTO>> PayaTransfer(PayaTransferReqDTO transferReqDTO)
         {
             var result = await _payaTransferService.PayaTransferAsync(transferReqDTO);
             try
@@ -72,7 +72,7 @@ namespace BankingOperationsApi.Controllers
                     _logger.LogError($"{nameof(PayaTransfer)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
                     return BadRequest(_baseLog.ApiResponeFailByCodeProvider<PayaTransferReqDTO>(result.Content, result.StatusCode, result.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
                 }
-                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<PayaTransferRes>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<PayaTransferResDTO>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace BankingOperationsApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PayaBatchTransferRes))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PayaBatchTransferRes))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(PayaBatchTransferRes))]
-        public async Task<ActionResult<PayaBatchTransferRes>> PayaBatchTransfer(PayaBatchTransferReqDTO transferReqDTO)
+        public async Task<ActionResult<PayaBatchTransferResDTO>> PayaBatchTransfer(PayaBatchTransferReqDTO transferReqDTO)
         {
             var result = await _payaTransferService.PayaBatchTransferAsync(transferReqDTO);
             try
@@ -95,9 +95,9 @@ namespace BankingOperationsApi.Controllers
                 if (result.StatusCode != "OK")
                 {
                     _logger.LogError($"{nameof(PayaBatchTransfer)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
-                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<SatnaTransferReqDTO>(result.Content, result.StatusCode, result.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<PayaBatchTransferReqDTO>(result.Content, result.StatusCode, result.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
                 }
-                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<PayaBatchTransferRes>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<PayaBatchTransferResDTO>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
             }
             catch (Exception ex)
             {
@@ -107,30 +107,30 @@ namespace BankingOperationsApi.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost("cancel")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PayaTransferCancellationRes))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PayaTransferCancellationRes))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(PayaTransferCancellationRes))]
-        public async Task<ActionResult<PayaTransferCancellationRes>> PayaTransferCancellation(PayaTransferCancellationReqDTO transferReqDTO)
-        {
-            var result = await _payaTransferService.PayaTransferCancellationAsync(transferReqDTO);
-            try
-            {
-                if (result.StatusCode != "OK")
-                {
-                    _logger.LogError($"{nameof(PayaTransferCancellation)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
-                    return BadRequest(_baseLog.ApiResponeFailByCodeProvider<SatnaTransferReqDTO>(result.Content, result.StatusCode, result.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
-                }
-                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<PayaTransferCancellationRes>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Exception occurred while {nameof(PayaTransferCancellation)}");
-                throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(PayaTransferCancellation)} => {ErrorCode.FaraboomTransferApiError.GetDisplayName()}");
-                //return ServiceHelperExtension.GenerateErrorMethodResponse<PayaTransferRes>(ErrorCode.InternalError);
-            }
-        }
+        //[AllowAnonymous]
+        //[HttpPost("cancel")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PayaTransferCancellationRes))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PayaTransferCancellationRes))]
+        //[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(PayaTransferCancellationRes))]
+        //public async Task<ActionResult<PayaTransferCancellationRes>> PayaTransferCancellation(PayaTransferCancellationReqDTO transferReqDTO)
+        //{
+        //    var result = await _payaTransferService.PayaTransferCancellationAsync(transferReqDTO);
+        //    try
+        //    {
+        //        if (result.StatusCode != "OK")
+        //        {
+        //            _logger.LogError($"{nameof(PayaTransferCancellation)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
+        //            return BadRequest(_baseLog.ApiResponeFailByCodeProvider<SatnaTransferReqDTO>(result.Content, result.StatusCode, result.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+        //        }
+        //        return Ok(_baseLog.ApiResponseSuccessByCodeProvider<PayaTransferCancellationRes>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Exception occurred while {nameof(PayaTransferCancellation)}");
+        //        throw new RamzNegarException(ErrorCode.InternalError, $"Exception occurred while: {nameof(PayaTransferCancellation)} => {ErrorCode.FaraboomTransferApiError.GetDisplayName()}");
+        //        //return ServiceHelperExtension.GenerateErrorMethodResponse<PayaTransferRes>(ErrorCode.InternalError);
+        //    }
+        //}
 
     }
 }

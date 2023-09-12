@@ -73,9 +73,10 @@ namespace BankingOperationsApi.Services.PayaTransfer
                 string requestId = await _payaTransferRepository.InsertPayaRequestLog(payaRequest);
                 var payaTransferReq = _mapper.Map<PayaTransferReq>(payaTransferReqDTO);
                 var result =await _client.GetPayaTransferAsync(payaTransferReq);
+                //var payaTransferRes = _mapper.Map<PayaTransferResDTO>(result);
                 return new OutputModel
                 {
-                    Content = result.ResultMessage.ToString(),
+                    Content = result.ResultMessage,
                     RequestId = requestId,
                     StatusCode = result.StatusCode
                 };
