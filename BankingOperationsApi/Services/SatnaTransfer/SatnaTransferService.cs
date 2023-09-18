@@ -67,10 +67,6 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 SatnaRequestLogDTO satnaRequest = new SatnaRequestLogDTO(satnaTransferReqDTO.PublicLogData?.PublicReqId, satnaTransferReqDTO.ToString(),
                      satnaTransferReqDTO.PublicLogData?.UserId, satnaTransferReqDTO.PublicLogData?.PublicAppId, satnaTransferReqDTO.PublicLogData?.ServiceId);
                 string requestId = await _satnaTransferRepository.InsertSatnaRequestLog(satnaRequest);
-                BasePublicLogData basePublic = new BasePublicLogData
-                {
-                    PublicLogData = satnaTransferReqDTO.PublicLogData
-                };
                 var satnaTransferReq = _mapper.Map<SatnaTransferReq>(satnaTransferReqDTO);
                 var result = _client.GetSatnaTransferAsync(satnaTransferReq);
                 return new OutputModel
