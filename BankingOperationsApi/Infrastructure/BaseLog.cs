@@ -52,14 +52,15 @@ namespace BankingOperationsApi.Infrastructure
                 RequestId, codeProvider?.SafeReponseCode.ToString()));
             return ServiceHelperExtension.GenerateApiErrorResponse<ErrorResult>(codeProvider);
         }
-        public async Task<TResponse> TransferSendAsync<TRequest, TResponse>(string uriString, HttpMethod method, TRequest request,
+        public async Task<TResponse> TransferSendAsync<TRequest, TResponse>(string uriString, HttpMethod method, TRequest request,string token,
         [CallerMemberName] string callerMethodName = null) where TResponse : ErrorResult, new() where TRequest : class
         {
             {
                 var delay = TimeSpan.FromSeconds(20);
                 var cancellationToken = new CancellationTokenSource(delay).Token;
                 var requestHttpMessage = new HttpRequestMessage(method, uriString);
-                var token = await _baseRepository.FindAccessToken().ConfigureAwait(false);
+                //var token = await _baseRepository.FindAccessToken().ConfigureAwait(false);
+
                 if (token is null)
                 {
                     _logger.LogError($"token is null in the FindAccessToken method ->{ErrorCode.NotFound.GetDisplayName()}");

@@ -68,24 +68,27 @@ namespace BankingOperationsApi.Services.PayaTransfer
 
         public async Task<PayaTransferRes> GetPayaTransferAsync(PayaTransferReq payaTransferReq)
         {
+            var tokenResult = await GetTokenAsync();
             var response = await _baseLog.TransferSendAsync<PayaTransferReq, PayaTransferRes>
-               (_faraboomOptions.PayaTransferUrl, HttpMethod.Post, payaTransferReq);
+               (_faraboomOptions.PayaTransferUrl, HttpMethod.Post, payaTransferReq, tokenResult.AccessToken);
             return response;
         }
 
         public async Task<PayaBatchTransferRes> GetPayaBatchTransferAsync(PayaBatchTransferReq payaTransferReq)
         {
+            var tokenResult = await GetTokenAsync();
             var response = await _baseLog.TransferSendAsync<PayaBatchTransferReq, PayaBatchTransferRes>
-               (_faraboomOptions.PayaBatchTransferUrl, HttpMethod.Post, payaTransferReq);
+               (_faraboomOptions.PayaBatchTransferUrl, HttpMethod.Post, payaTransferReq, tokenResult.AccessToken);
             return response;
         }
 
-        public async Task<PayaTransferCancellationRes> GetPayaTransferCancellationAsync(PayaTransferCancellationReq payaTransferReq)
+        public async Task<PayaTransferCancellationRes> GetPayaTransferCancellationAsync(PayaTransferCancellationReq payaTransferReq )
         {
             var uriString = string.Format(_faraboomOptions.PayaCancelUrl,
               payaTransferReq.ReferenceId);
+            var tokenResult = await GetTokenAsync();
             var response = await _baseLog.TransferSendAsync<PayaTransferCancellationReq, PayaTransferCancellationRes>
-               (uriString, HttpMethod.Post, payaTransferReq);
+               (uriString, HttpMethod.Post, payaTransferReq, tokenResult.AccessToken);
             return response;
         }
     }

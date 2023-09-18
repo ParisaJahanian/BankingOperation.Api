@@ -16,7 +16,7 @@ namespace BankingOperationsApi.Services.SatnaTransfer
         private readonly ILogger<SatnaTransferService> _logger;
         private IConfiguration _configuration { get; set; }
         private ISatnaTransferRepository _satnaTransferRepository { get; set; }
-        private IBaseRepository _baseRepository{ get; set; }
+        private IBaseRepository _baseRepository { get; set; }
 
         public SatnaTransferService(IMapper mapper, ILogger<SatnaTransferService> logger,
             IConfiguration configuration, ISatnaTransferClient client,
@@ -67,6 +67,10 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 SatnaRequestLogDTO satnaRequest = new SatnaRequestLogDTO(satnaTransferReqDTO.PublicLogData?.PublicReqId, satnaTransferReqDTO.ToString(),
                      satnaTransferReqDTO.PublicLogData?.UserId, satnaTransferReqDTO.PublicLogData?.PublicAppId, satnaTransferReqDTO.PublicLogData?.ServiceId);
                 string requestId = await _satnaTransferRepository.InsertSatnaRequestLog(satnaRequest);
+                BasePublicLogData basePublic = new BasePublicLogData
+                {
+                    PublicLogData = satnaTransferReqDTO.PublicLogData
+                };
                 var satnaTransferReq = _mapper.Map<SatnaTransferReq>(satnaTransferReqDTO);
                 var result = _client.GetSatnaTransferAsync(satnaTransferReq);
                 return new OutputModel

@@ -68,9 +68,9 @@ namespace BankingOperationsApi.Services.SatnaTransfer
 
         public async Task<SatnaTransferRes> GetSatnaTransferAsync(SatnaTransferReq satnaTransferReq)
         {
-           
+            var tokenResult = await GetTokenAsync();
             var response = await _baseLog.TransferSendAsync<SatnaTransferReq, SatnaTransferRes>
-                (_faraboomOptions.SatnaTransferUrl, HttpMethod.Post, satnaTransferReq);
+                (_faraboomOptions.SatnaTransferUrl, HttpMethod.Post, satnaTransferReq,tokenResult.AccessToken);
             return response;
         }
 
