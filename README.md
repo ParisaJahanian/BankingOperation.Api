@@ -1,3 +1,4 @@
 # FaraboomBankingOperation.Api
 
- This microservice Api project implemneted some banking services that provides from Faraboom.
+ This microservice Api project implemented some banking services that are provided by Faraboom. 
+
