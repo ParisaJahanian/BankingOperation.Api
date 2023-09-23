@@ -12,20 +12,18 @@ using Microsoft.OpenApi.Extensions;
 namespace BankingOperationsApi.Controllers
 {
     [ApiController]
-    [ApiVersion("1")]
+    [ApiVersion("v1")]
     [Route("Faraboom/v1/[controller]")]
     [ApiExplorerSettings]
     [ApiResultFilterAttribute]
     public class PayaTransferController : ControllerBase
     {
-        private IConfiguration _configuration { get; }
         private ILogger<PayaTransferController> _logger { get; }
         private BaseLog _baseLog { get; }
         private IPayaTransferService _payaTransferService { get; }
-        public PayaTransferController(IConfiguration configuration, ILogger<PayaTransferController> logger,
+        public PayaTransferController(ILogger<PayaTransferController> logger,
             BaseLog baseLog, IPayaTransferService payaTransferService)
         {
-            _configuration = configuration;
             _logger = logger;
             _baseLog = baseLog;
             _payaTransferService = payaTransferService;

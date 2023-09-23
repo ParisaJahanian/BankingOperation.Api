@@ -11,21 +11,19 @@ using Microsoft.OpenApi.Extensions;
 namespace BankingOperationsApi.Controllers
 {
     [ApiController]
-    [ApiVersion("1")]
+    [ApiVersion("v1")]
     [Route("Faraboom/v1/[controller]")]
     [ApiExplorerSettings]
     [ApiResultFilterAttribute]
     public class SatnaTransferController : ControllerBase
     {
         private ISatnaTransferService _satnaTransferService { get; }
-        private IConfiguration _configuration { get; }
         private ILogger<SatnaTransferController> _logger { get; }
         private BaseLog _baseLog { get; }
-        public SatnaTransferController(ISatnaTransferService satnaTransferService, IConfiguration configuration,
+        public SatnaTransferController(ISatnaTransferService satnaTransferService,
             ILogger<SatnaTransferController> logger, BaseLog baseLog)
         {
             _satnaTransferService = satnaTransferService;
-            _configuration = configuration;
             _logger = logger;
             _baseLog = baseLog;
         }
