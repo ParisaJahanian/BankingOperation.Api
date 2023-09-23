@@ -12,7 +12,7 @@ using Microsoft.OpenApi.Extensions;
 namespace BankingOperationsApi.Controllers
 {
     [ApiController]
-    [ApiVersion("v1")]
+    [ApiVersion("1")]
     [Route("Faraboom/v1/[controller]")]
     [ApiExplorerSettings]
     [ApiResultFilterAttribute]
