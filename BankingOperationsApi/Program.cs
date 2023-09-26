@@ -1,5 +1,6 @@
 ﻿using BankingOperationsApi.Data;
 using BankingOperationsApi.Infrastructure.Extension;
+using BankingOperationsApi.Services.PayaTransfer;
 using BankingOperationsApi.Services.SatnaTransfer;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ builder.Services.ConfigureLogging(builder.Configuration, builder.Environment);
 builder.Services.AddDbContext<FaraboomDbContext>(options =>
    options.UseOracle(builder.Configuration["ConnectionStrings:FaraboomConnection"]));
 builder.Services.AddHttpClient<ISatnaTransferClient, SatnaTransferClient>();
+builder.Services.AddHttpClient<IPayaTransferClient, PayaTransferClient>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddFaraboomServices(builder.Configuration);
 
