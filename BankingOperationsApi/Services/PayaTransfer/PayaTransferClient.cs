@@ -39,6 +39,11 @@ namespace BankingOperationsApi.Services.PayaTransfer
                 var response = await _httpClient.SendAsync(request)
                     .ConfigureAwait(false);
                 var responseBodyJson = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation($"{nameof(GetTokenAsync)} -> the reason is {responseBodyJson}");
+                    return ServiceHelperExtension.GenerateErrorMethodResponse<TokenRes>(ErrorCode.FaraboomTransferApiError);
+                }
                 var payaLoginOutput =
                     JsonSerializer.Deserialize<TokenRes>(responseBodyJson,
                         ServiceHelperExtension.JsonSerializerOptions);

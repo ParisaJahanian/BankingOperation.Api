@@ -38,6 +38,11 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 var response = await _httpClient.SendAsync(request)
                     .ConfigureAwait(false);
                 var responseBodyJson = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation($"{nameof(GetTokenAsync)} -> the reason is {responseBodyJson}");
+                    return ServiceHelperExtension.GenerateErrorMethodResponse<TokenRes>(ErrorCode.FaraboomTransferApiError);
+                }
                 var satnaLoginOutput =
                     JsonSerializer.Deserialize<TokenRes>(responseBodyJson,
                         ServiceHelperExtension.JsonSerializerOptions);
