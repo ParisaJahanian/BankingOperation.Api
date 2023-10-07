@@ -8,7 +8,6 @@ namespace BankingOperationsApi.Models
         public string SourceDepositNumber { get; set; }
         public bool IgnoreError { get; set; }
         public Transaction[] Transactions { get; set; }
-        public int Count { get; set; }
     }
     public class Transaction
     {

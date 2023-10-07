@@ -11,7 +11,7 @@ namespace BankingOperationsApi.Models
         public string RefId { get; set; }
 
         [JsonPropertyName("balance")]
-        public string Balance { get; set; }
+        public long Balance { get; set; }
 
         [JsonPropertyName("currency")]
         public string Currency { get; set; }
