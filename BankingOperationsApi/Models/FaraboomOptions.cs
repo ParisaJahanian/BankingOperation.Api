@@ -18,7 +18,7 @@
         public string PayaTransferUrl { get; set; }
         public string PayaBatchTransferUrl { get; set; }
         public string PayaCancelUrl { get; set; }
-        public string Authorization { get; set; }
+        public string AppSecret { get; set; }
 
     }
 }

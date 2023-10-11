@@ -3,6 +3,7 @@ using System.Text.Json;
 using BankingOperationsApi.ErrorHandling;
 using BankingOperationsApi.Models;
 using Microsoft.OpenApi.Extensions;
+using System.Text;
 
 namespace BankingOperationsApi.Infrastructure.Extension
 {
@@ -36,7 +37,10 @@ namespace BankingOperationsApi.Infrastructure.Extension
             request.Headers.Add("Accept-Language", "fa");
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Cookie", options.Cookie);
-            request.Headers.Add("Authorization", "Basic " + options.Authorization);
+            var authenticationParam =
+               Convert.ToBase64String(
+                 Encoding.ASCII.GetBytes($"{options.AppKey}:{options.AppSecret}"));
+            request.Headers.Add("Authorization", "Basic " + authenticationParam);
         }
         public static void AddFaraboomCommonHeader(this HttpRequestMessage request, FaraboomOptions options, string token)
         {

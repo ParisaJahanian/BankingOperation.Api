@@ -3,6 +3,7 @@ using BankingOperationsApi.Infrastructure.Extension;
 using BankingOperationsApi.Services.PayaTransfer;
 using BankingOperationsApi.Services.SatnaTransfer;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(typeof(Program));
@@ -12,8 +13,23 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureLogging(builder.Configuration, builder.Environment);
 builder.Services.AddDbContext<FaraboomDbContext>(options =>
    options.UseOracle(builder.Configuration["ConnectionStrings:FaraboomConnection"]));
-builder.Services.AddHttpClient<ISatnaTransferClient, SatnaTransferClient>();
-builder.Services.AddHttpClient<IPayaTransferClient, PayaTransferClient>();
+builder.Services.AddHttpClient<ISatnaTransferClient, SatnaTransferClient>()
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        return new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+        };
+    });
+
+builder.Services.AddHttpClient<IPayaTransferClient, PayaTransferClient>()
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        return new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+        };
+    });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddFaraboomServices(builder.Configuration);
 
@@ -26,11 +42,13 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
-    app.UseHsts();
+
 }
+app.UseHsts();
+
 app.UseStaticFiles();
 app.UseSwagger();
-app.UseSwaggerUI(c=>c.SwaggerEndpoint("/swagger/v1/swagger.json", $" پنل سرویس های فرابوم"));
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $" پنل سرویس های فرابوم"));
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseEndpoints(endpoints =>

@@ -6,6 +6,7 @@ using BankingOperationsApi.Infrastructure.Extension;
 using BankingOperationsApi.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Extensions;
+using System.Security.Authentication;
 using System.Text.Json;
 
 namespace BankingOperationsApi.Services.SatnaTransfer
@@ -28,8 +29,10 @@ namespace BankingOperationsApi.Services.SatnaTransfer
         }
         public async Task<TokenRes> GetTokenAsync()
         {
+            
             try
             {
+              
                 var loginUri = new Uri(_faraboomOptions.TokenUrl, UriKind.RelativeOrAbsolute);
                 var request = new HttpRequestMessage(HttpMethod.Post, loginUri);
                 request.AddFaraboomTokenHeader(_faraboomOptions);
