@@ -71,7 +71,7 @@ namespace BankingOperationsApi.Services.SatnaTransfer
                 var result = _client.GetSatnaTransferAsync(satnaTransferReq);
                 return new OutputModel
                 {
-                    Content = result.Result.ToString(),
+                    Content = result.Result.ResultMessage.ToString(),
                     RequestId = requestId,
                     StatusCode = result.Result.StatusCode
                 };

@@ -80,7 +80,7 @@ namespace BankingOperationsApi.Infrastructure
                 HttpResponseMessage httpResponseMessage;
                 try
                 {
-                    httpResponseMessage = await _httpClient.SendAsync(requestHttpMessage, cancellationToken)
+                    httpResponseMessage = await _httpClient.SendAsync(requestHttpMessage)
                         .ConfigureAwait(false);
                 }
                 catch (TaskCanceledException e)

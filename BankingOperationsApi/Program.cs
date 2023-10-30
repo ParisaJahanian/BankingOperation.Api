@@ -23,13 +23,14 @@ builder.Services.AddHttpClient<ISatnaTransferClient, SatnaTransferClient>()
     });
 
 builder.Services.AddHttpClient<IPayaTransferClient, PayaTransferClient>()
-    .ConfigurePrimaryHttpMessageHandler(() =>
-    {
-        return new HttpClientHandler
-        {
-            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-        };
-    });
+    //.ConfigurePrimaryHttpMessageHandler(() =>
+    //{
+    //    return new HttpClientHandler
+    //    {
+    //        ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+    //    };
+    //})
+    ;
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddFaraboomServices(builder.Configuration);
 
