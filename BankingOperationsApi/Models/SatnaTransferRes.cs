@@ -19,7 +19,7 @@ namespace BankingOperationsApi.Models
         public string Currency { get; set; }
 
         [JsonPropertyName("id")]
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         [JsonPropertyName("instant_debit")]
         public bool InstantDebit { get; set; }
