@@ -67,7 +67,7 @@ namespace BankingOperationsApi.Controllers
                     _logger.LogError($"{nameof(SatnaTransfer)} not-success request - input \r\n response:{result.StatusCode}-{result.Content}");
                     return BadRequest(_baseLog.ApiResponeFailByCodeProvider<SatnaTransferReqDTO>(result.Content, result.StatusCode, result.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
                 }
-                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<SatnaTransferRes>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
+                return Ok(_baseLog.ApiResponseSuccessByCodeProvider<SatnaTransferResDTO>(result?.Content, result.StatusCode, result?.RequestId, transferReqDTO?.PublicLogData?.PublicReqId));
             }
             catch (Exception ex)
             {
